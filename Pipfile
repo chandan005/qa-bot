@@ -22,9 +22,7 @@ langchain-community = "*"
 langchainhub = "*"
 langchain-openai = "*"
 langchain-chroma = "*"
-bs4 = "*"
 pinecone-client = "*"
-pypdf2 = "*"
 pypdf = "*"
 
 [requires]
