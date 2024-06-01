@@ -1,24 +1,50 @@
-from langchain.llms import OpenAI
-from langchain.chains.question_answering import load_qa_chain
-from langchain.schema import Document
+
+from typing import List
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import Chroma
+from langchain_community.document_loaders import PyPDFLoader
+from langchain.chains import RetrievalQA
 from app.schema.qa import QuestionAnswerPair
-from app.vector_db.vector_db import MilvusClient
+from app.vector_db.pinecone_client import PineconeClient
+from app.config.config import settings
 
-milvus_client = MilvusClient()
+pinecone_client = PineconeClient()
 
-def get_answers(documents: list[Document], questions: list[str]) -> list[QuestionAnswerPair]:
-    llm = OpenAI()
-    chain = load_qa_chain(llm, chain_type="stuff")
+def extract_pdf(file_path: str) -> List[str]:
+    loader = PyPDFLoader(file_path=file_path)
+    docs = loader.load()
+    return docs
 
-    for doc in documents:
-        embedding = chain.embed_document(doc)
-        milvus_client.insert_embeddings([(doc.id, embedding)])
+def split_doc(docs: str) -> any:
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size = 1500,chunk_overlap = 150)
+    splits = text_splitter.split_documents(docs)
+    return splits
+
+def persist_embeddings(splits: any):
+    embeddings = OpenAIEmbeddings(api_key=settings.OPENAI_KEY)
+    pinecone_client.insert_embeddings(embeddings)
+
+def get_answers(docs: str, questions: List[str]) -> List[QuestionAnswerPair]:
+    llm = ChatOpenAI(model="gpt-3.5-turbo-0125", api_key=settings.OPENAI_KEY)
+    documents = split_doc(docs=docs)
+    embeddings = OpenAIEmbeddings(openai_api_key=settings.OPENAI_KEY)
+
+    persist_directory = 'docs/chroma/'
+
+    # Create the vector store
+    vectordb = Chroma.from_documents(documents=documents, embedding=embeddings, persist_directory=persist_directory)
+    qa_chain = RetrievalQA.from_chain_type(llm, retriever=vectordb.as_retriever())
 
     answers = []
     for question in questions:
-        embedding = chain.embed_question(question)
-        similar_docs = milvus_client.search(embedding)
-        answer = chain.run(input_documents=[Document(id=doc.id, text=doc.text, page_content="") for doc in similar_docs], question=question)
-        answers.append(QuestionAnswerPair(question=question, answer=answer))
+        print('Question', question)
+        result = qa_chain.invoke({"query": question})
+        answers.append(QuestionAnswerPair(question=question, answer=result.get('result')))
+        # embedding = chain.embed_question(question)
+        # similar_docs = pinecone_client.search(embedding)
+        # similar_documents = [{"page_content": doc.metadata['text']} for doc in similar_docs]
+        # answer = chain.run(input_documents=similar_documents, question=question)
+        # answers.append(QuestionAnswerPair(question=question, answer=answer))
 
     return answers
