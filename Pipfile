@@ -1,17 +1,22 @@
 [[source]]
+name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
-name = "pypi"
-
-[packages]
-fastapi = "==0.111.0"
-gunicorn = "*"
-uvicorn = "*"
 
 [dev-packages]
 black = "*"
 isort = "*"
-pylint = "*"
+flake8 = "*"
+mypy = "*"
+
+[packages]
+fastapi = "*"
+uvicorn = "*"
+langchain = "*"
+pymilvus = "*"
+pydantic = "*"
+python-dotenv = "*"
+pydantic-settings = "*"
 
 [requires]
-python_version = "3.12"
+python_version = "3.11"
