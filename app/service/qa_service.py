@@ -31,13 +31,7 @@ def get_answers(docs: str, questions: List[str]) -> List[QuestionAnswerPair]:
 
     answers = []
     for question in questions:
-        print('Question', question)
         result = qa_chain.invoke({"query": question})
         answers.append(QuestionAnswerPair(question=question, answer=result.get('result')))
-        # embedding = chain.embed_question(question)
-        # similar_docs = pinecone_client.search(embedding)
-        # similar_documents = [{"page_content": doc.metadata['text']} for doc in similar_docs]
-        # answer = chain.run(input_documents=similar_documents, question=question)
-        # answers.append(QuestionAnswerPair(question=question, answer=answer))
 
     return answers
