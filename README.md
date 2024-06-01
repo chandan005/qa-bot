@@ -42,30 +42,40 @@ Create a `.env.dev` file for development environment and `.env.prod` file for pr
 4. Run the Application Locally
 
    ```bash
-   pipenv run uvicorn app.main --reload
+   make run:dev
    ```
 
 5. Test the API
 
-You can use tools like curl or Postman to test the API endpoints. Refer to the provided test cases for different scenarios to test.
+The API can be tested at `http://localhost:8000/docs` when running the application locally.
 
 6. Dockerize the Application (Optional)
 
    ```bash
-   docker build -t qa-bot -f Dockerfile .
-   docker run -p 8000:8000 qa-bot
+   make docker-run-dev
    ```
 
-7. Deploy to Production
+7. Dockerizing in production
 
 Deploy the application to a production server using your preferred hosting provider. Make sure to set the environment variables for the production environment and configure the server accordingly.
 
 ```bash
-    docker build -t qa-bot -f Dockerfile.prod .
-    docker run -p 8000:8000 qa-bot
+   make docker-run-prod
 ```
 
-## API Documentation
+6. Format
+
+   ```bash
+   make format
+   ```
+
+6. Lint
+
+   ```bash
+   make lint
+   ```
+
+10. API Documentation
 
 The API documentation can be accessed at `http://localhost:8000/docs` when running the application locally. It provides detailed information about the available endpoints, request parameters, and response formats.
 """
