@@ -1,8 +1,9 @@
 import os
-# from pydantic_settings import BaseSettings
 
 class Settings():
     OPENAI_KEY: str
+    MILVUS_HOST: str
+    MILVUS_PORT: str
 
     class Config:
         env_file = ".env"

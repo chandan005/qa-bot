@@ -17,6 +17,7 @@ pymilvus = "*"
 pydantic = "*"
 python-dotenv = "*"
 pydantic-settings = "*"
+vectordb2 = "*"
 
 [requires]
 python_version = "3.11"

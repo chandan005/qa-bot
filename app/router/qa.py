@@ -1,7 +1,7 @@
 from fastapi import APIRouter, UploadFile, File
-from app.schemas.qa import QuestionAnswerResponse
+from app.schema.qa import QuestionAnswerResponse
 from app.utils.file_loader import load_questions, load_document
-from app.services.qa_service import get_answers
+from app.service.qa_service import get_answers
 
 router = APIRouter()
 

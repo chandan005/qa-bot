@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.exceptions import HTTPException
-from app.core.config import settings
-from app.routers import qa
+from app.config.config import settings
+from app.router import qa
 from app.exceptions.handlers import http_exception_handler, custom_exception_handler
 from app.exceptions.custom_exceptions import CustomException
 

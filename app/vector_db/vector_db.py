@@ -1,5 +1,5 @@
 from pymilvus import connections, Collection, CollectionSchema, FieldSchema, DataType
-from app.core.config import settings
+from app.config.config import settings
 
 class MilvusClient:
     def __init__(self):
