@@ -49,13 +49,13 @@ Create a `.env.dev` file for development environment and `.env.prod` file for pr
 
 The API can be tested at `http://localhost:8000/docs` when running the application locally.
 
-6. Dockerize the Application (Optional)
+6. Dockerize the Application in Local (Optional)
 
    ```bash
    make docker-run-dev
    ```
 
-7. Dockerizing in production
+7. Dockerize the application for production
 
 Deploy the application to a production server using your preferred hosting provider. Make sure to set the environment variables for the production environment and configure the server accordingly.
 

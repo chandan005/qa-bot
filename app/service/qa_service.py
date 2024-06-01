@@ -6,10 +6,7 @@ from langchain_community.vectorstores import Chroma
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.chains import RetrievalQA
 from app.schema.qa import QuestionAnswerPair
-from app.vector_db.pinecone_client import PineconeClient
 from app.config.config import settings
-
-pinecone_client = PineconeClient()
 
 def extract_pdf(file_path: str) -> List[str]:
     loader = PyPDFLoader(file_path=file_path)
@@ -20,10 +17,6 @@ def split_doc(docs: str) -> any:
     text_splitter = RecursiveCharacterTextSplitter(chunk_size = 1500,chunk_overlap = 150)
     splits = text_splitter.split_documents(docs)
     return splits
-
-def persist_embeddings(splits: any):
-    embeddings = OpenAIEmbeddings(api_key=settings.OPENAI_KEY)
-    pinecone_client.insert_embeddings(embeddings)
 
 def get_answers(docs: str, questions: List[str]) -> List[QuestionAnswerPair]:
     llm = ChatOpenAI(model="gpt-3.5-turbo-0125", api_key=settings.OPENAI_KEY)
